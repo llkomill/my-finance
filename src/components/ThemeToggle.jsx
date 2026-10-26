@@ -82,6 +82,8 @@ function ThemeToggle() {
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isNight)
+    // Цвет строки состояния телефона подстраивается под тему.
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isNight ? '#020617' : '#f8fafc')
     try {
       localStorage.setItem(STORAGE_KEY, isNight ? 'dark' : 'light')
     } catch {

@@ -15,9 +15,7 @@ function Navbar() {
       <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/80 pt-[env(safe-area-inset-top)] backdrop-blur-lg dark:border-slate-800/80 dark:bg-slate-950/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <Link to="/" className="flex min-w-0 items-center gap-3">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 text-lg font-bold text-white shadow-sm shadow-emerald-600/30">
-              $
-            </span>
+            <img src="/favicon.svg" alt="" className="size-10 shrink-0 rounded-xl shadow-sm shadow-emerald-600/30" />
             <span className="min-w-0">
               <span className="block truncate text-base font-bold tracking-tight sm:text-lg">Личные финансы</span>
               <span className="hidden text-xs text-slate-500 sm:block dark:text-slate-400">Ваш бюджет под вашим контролем</span>
