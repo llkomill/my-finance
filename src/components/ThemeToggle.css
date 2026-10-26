@@ -1,0 +1,159 @@
+/* Переключатель день/ночь. Нарисован в размере 200×90 и уменьшается через --scale. */
+.theme-toggle-wrap {
+  --scale: 0.4;
+  --dur: 0.8s;
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+  width: calc(200px * var(--scale));
+  height: calc(90px * var(--scale));
+  flex-shrink: 0;
+  /* transform не уменьшает место в раскладке: без обрезки кнопка шириной 200px
+     растягивала страницу по горизонтали на телефонах. */
+  overflow: clip;
+  overflow-clip-margin: 10px;
+}
+
+.theme-toggle {
+  position: relative;
+  width: 200px;
+  height: 90px;
+  padding: 0;
+  border-radius: 45px;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transform: scale(var(--scale));
+  transform-origin: top left;
+  background: linear-gradient(135deg, #5bb8ff, #9fd8ff);
+  box-shadow:
+    inset 0 6px 10px rgba(0, 0, 0, 0.25),
+    0 8px 20px rgba(0, 0, 0, 0.15);
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-toggle:focus-visible { outline: 6px solid #f7b733; outline-offset: 8px; }
+
+/* Ночной фон — отдельный слой, плавно проявляется */
+.theme-toggle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #1b2347, #3a3f7a);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+.theme-toggle.night::before { opacity: 1; }
+
+.theme-toggle span { position: absolute; }
+
+/* Светящиеся «кольца» вокруг солнца/луны */
+.theme-toggle .halo {
+  top: 50%;
+  left: 45px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    rgba(255, 255, 255, 0.18) 0 30%,
+    rgba(255, 255, 255, 0.12) 30% 45%,
+    rgba(255, 255, 255, 0.06) 45% 60%,
+    transparent 60%);
+  transition: left var(--dur) var(--ease);
+  pointer-events: none;
+}
+.theme-toggle.night .halo { left: 155px; }
+
+/* Шар: солнце -> луна */
+.theme-toggle .knob {
+  top: 10px;
+  left: 10px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3a6, #f9c933 55%, #f0a500);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.25),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.12),
+    0 0 20px rgba(255, 210, 60, 0.6);
+  transition:
+    transform var(--dur) var(--ease),
+    background var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+  z-index: 3;
+  overflow: hidden;
+}
+.theme-toggle.night .knob {
+  transform: translateX(110px) rotate(360deg);
+  background: radial-gradient(circle at 35% 30%, #ffffff, #d7dcef 55%, #aab3d1);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(200, 210, 255, 0.5);
+}
+
+/* Кратеры луны */
+.theme-toggle .crater {
+  border-radius: 50%;
+  background: #b5bdd8;
+  box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: scale(0.2);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.theme-toggle .crater.c1 { width: 18px; height: 18px; top: 14px; left: 30px; }
+.theme-toggle .crater.c2 { width: 12px; height: 12px; top: 38px; left: 16px; }
+.theme-toggle .crater.c3 { width: 9px; height: 9px; top: 44px; left: 42px; }
+.theme-toggle.night .crater { opacity: 1; transform: scale(1); }
+.theme-toggle.night .crater.c2 { transition-delay: 0.08s; }
+.theme-toggle.night .crater.c3 { transition-delay: 0.16s; }
+
+/* Облака */
+.theme-toggle .cloud {
+  background: #fff;
+  border-radius: 50px;
+  z-index: 2;
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.08));
+}
+.theme-toggle .cloud::before,
+.theme-toggle .cloud::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+}
+.theme-toggle .cloud.big { width: 46px; height: 16px; right: 22px; top: 44px; }
+.theme-toggle .cloud.big::before { width: 22px; height: 22px; top: -12px; left: 6px; }
+.theme-toggle .cloud.big::after { width: 18px; height: 18px; top: -8px; right: 6px; }
+.theme-toggle .cloud.small { width: 30px; height: 11px; right: 58px; top: 28px; opacity: 0.85; }
+.theme-toggle .cloud.small::before { width: 14px; height: 14px; top: -8px; left: 4px; }
+.theme-toggle .cloud.small::after { width: 11px; height: 11px; top: -5px; right: 4px; }
+.theme-toggle.night .cloud.big { transform: translateY(70px); opacity: 0; }
+.theme-toggle.night .cloud.small { transform: translateY(70px); opacity: 0; transition-delay: 0.06s; }
+
+/* Звёзды */
+.theme-toggle .star {
+  width: var(--s, 4px);
+  height: var(--s, 4px);
+  background: #fff;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(-40px) scale(0.3);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.theme-toggle.night .star {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: theme-toggle-twinkle 2s ease-in-out infinite;
+  animation-delay: calc(var(--dur) + var(--d, 0s));
+}
+@keyframes theme-toggle-twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-wrap { --dur: 0.01s; }
+  .theme-toggle.night .star { animation: none; }
+}
